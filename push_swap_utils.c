@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   push_swap_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chheniqu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: chheniqu <chheniqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:18:58 by chheniqu          #+#    #+#             */
-/*   Updated: 2025/02/04 11:19:00 by chheniqu         ###   ########.fr       */
+/*   Updated: 2025/02/17 12:41:46 by chheniqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 int	stack_len(t_stack_node *stack)
 //calculer la longueur de la pile > calcule de la mediane + couts deplacements
 {
-	int	count;
+	int	len;
 
-	count = 0;
+	len = 0;
 	while (stack)
 	{
+		len++;
 		stack = stack->next;
-		count++;
 	}
-	return (count);
+	return (len);
 }
 
 t_stack_node	*find_last_node(t_stack_node *stack)
@@ -37,11 +37,10 @@ t_stack_node	*find_last_node(t_stack_node *stack)
 }
 
 bool	stack_sorted(t_stack_node *stack)
-//verifie que la pile est stocke dans l'ordre croissant
 {
-	if (!stack)
+	if (!stack || !stack->next)
 		return (true);
-	while (stack)
+	while (stack->next)
 	{
 		if (stack->nbr > stack->next->nbr)
 			return (false);
@@ -76,7 +75,7 @@ t_stack_node	*find_max(t_stack_node *stack)
 
 	max = LONG_MIN;
 	node_max = NULL;
-	while(stack)
+	while (stack)
 	{
 		if (stack->nbr > max)
 		{

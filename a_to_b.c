@@ -34,50 +34,50 @@ void	current_index(t_stack_node *stack)
 	}
 }
 
-void	set_target_a(t_stack_node *a, t_stack_node *b)
+static void	set_target_a(t_stack_node *a, t_stack_node *b)
 {
 	t_stack_node	*current_node;
 	t_stack_node	*target_node;
 	long			best_match_index;
 
-	current_node = b;
-	best_match_index = LONG_MIN;
 	while (a)
 	{
+		current_node = b;
+		best_match_index = LONG_MIN;
 		while (current_node)
 		{
-			if (current_node->nbr > a->nbr
-				&& current_node > best_match_index)//si notre nombre est plus petit et qu'il est plus grande que notre meilleure combinaison
+			if (current_node->nbr < a->nbr
+				&& current_node->nbr > best_match_index)
 			{
 				best_match_index = current_node->nbr;
 				target_node = current_node;
 			}
-			current_node = current_node->next;//on continue dans toute la liste pour essayer de trouver une meilleure combinaison
+			current_node = current_node->next;
 		}
-		if (best_match_index == LONG_MIN)//si notre best match n'a pas change de notre valeur par defaut, on a pas trouve de nombre plus petit que a, c'est donc le plus petit
-			a->target_node = find_max(b);//on cherche donc le maximum
+		if (best_match_index == LONG_MIN)
+			a->target_node = find_max(b);
 		else
-			a->target_node = target_node;//on associe notre target node a celui u'on a trouve
-		a = a->next;//on passe au noeud suivant pour lui trouver son propre target node
+			a->target_node = target_node;
+		a = a->next;
 	}
 }
 
-static void	cost_analysis(t_stack_node *a, t_stack_node *b)//calcule du nombre de deplacements pour que les target de a et b soient en haut de la pile
+static void	cost_analysis(t_stack_node *a, t_stack_node *b)
 {
-	int	len_a;//recuperation des longueurs de a et b pour calculer les rotations possible
+	int	len_a;
 	int	len_b;
 
 	len_a = stack_len(a);
 	len_b = stack_len(b);
-	a->push_cost = a->index;
 	while (a)
 	{
-		if (!(a->above_median))//si on est en dessous du milieu
-			a->push_cost = len_a - (a->index);//longueur de la liste moins l'index
-		if (a->target_node->above_median)//si notre target node est au dessus de la mediane
-			a->push_cost += a->target_node->index;//son nombre d'operation est son index + l'index de son target node
-		else//si notre target node est sous la mediane
-			a->push_cost += len_b - (a->target_node->index);//longueur de otre liste moins l'index de notre target node
+		a->push_cost = a->index;
+		if (!(a->above_median))
+			a->push_cost = len_a - (a->index);
+		if (a->target_node->above_median)
+			a->push_cost += a->target_node->index;
+		else
+			a->push_cost += len_b - (a->target_node->index);
 		a = a->next;
 	}
 }
@@ -91,17 +91,17 @@ void	set_cheapest(t_stack_node *stack)
 	cheapest_node = NULL;
 	while (stack)
 	{
-		if (cheapest_value > stack->push_cost)//si notre cheapest value est plus grande que notre push cost, on la met a jour
+		if (cheapest_value > stack->push_cost)
 		{
 			cheapest_value = stack->push_cost;
-			cheapest_node = stack;//notre noeud le moins cher devient celui
+			cheapest_node = stack;
 		}
 		stack = stack->next;
 	}
-	cheapest_node->cheapest = true;//la condition devient vraie car c'est bien le noeud le moins couteux
+	cheapest_node->cheapest = true;
 }
 
-void	init_stack_a(t_stack_node *a, t_stack_node *b)
+void	init_node_a(t_stack_node *a, t_stack_node *b)
 {
 	current_index(a);
 	current_index(b);

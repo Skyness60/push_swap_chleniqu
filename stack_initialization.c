@@ -38,7 +38,7 @@
 // 	}
 // }
 
-void	init_stack_a(t_stack_node **a, char *argv)
+void	init_stack_a(t_stack_node **a, char **argv)
 {
 	int		i;
 	long	nb;
@@ -48,12 +48,13 @@ void	init_stack_a(t_stack_node **a, char *argv)
 	while (argv[i])
 	{
 		if (ft_check_number(argv[i]))
-			return (ft_free_node(a), ft_error_msg("Error\n number is not digit"));
+			return (ft_free_node(a), ft_error_msg("Error"));
 		if (ft_atoi_check(argv[i]) == 1)
-			return (ft_free_node(a), ft_error_msg("Error\n INT MAX or INT MIN"));
+			return (ft_free_node(a), ft_error_msg("Error"));
 		nb = ft_atoi(argv[i]);
-		if (ft_check_doubles(*a, nb))
-			return (ft_free_node(a), ft_error_msg("Error\n double in args"));
+		if (*a && ft_check_doubles(*a, nb))
+			return (free_poubelle((*a)->poubelle), free((*a)->poubelle), \
+			free(*a), ft_error_msg("Error"));
 		add_node(a, (int)nb);
 		i++;
 	}
@@ -61,19 +62,20 @@ void	init_stack_a(t_stack_node **a, char *argv)
 
 void	ft_stackaddback(t_stack_node **lst, t_stack_node *new)
 {
-	t_stack_node	*tmp;
+	t_stack_node	*last;
 
-	if (lst)
+	if (!lst || !new)
+		return ;
+	if (!*lst)
 	{
-		if (*lst == NULL)
-			*lst = new;
-		else
-		{
-			tmp = *lst;
-			while (tmp->next)
-				tmp = tmp->next;
-			tmp->next = new;
-		}
+		*lst = new;
+		new->next = NULL;
+	}
+	else
+	{
+		last = ft_lstlast(*lst);
+		last->next = new;
+		new->next = NULL;
 	}
 }
 
@@ -86,18 +88,17 @@ void	add_node(t_stack_node **stack, int nb)
 	node = malloc(sizeof(t_stack_node));
 	if (!node)
 		return ;
-	node->next = NULL;//dernier noeud de la liste
-	node->nbr = nb;//remplir node
+	node->next = NULL;
+	node->nbr = nb;
 	node->cheapest = 0;
-	if (!(*stack))//si notre stack est vide
+	add_pointeur_malloc((*stack)->poubelle, node);
+	if (!(*stack))
 	{
 		*stack = node;
-		node->next = NULL;//unique noeud, donc le noeud d'avant est null
+		node->next = NULL;
 	}
-	else//si notre stack a deja des elements, on va chercher 
-	{
+	else
 		ft_stackaddback(stack, node);
-	}
 }
 
 t_stack_node	*get_cheapest(t_stack_node *stack)
@@ -111,6 +112,7 @@ t_stack_node	*get_cheapest(t_stack_node *stack)
 	return (NULL);
 }
 
+//mettre le noeud en haut de la pile
 void	prep_for_push(t_stack_node **stack, t_stack_node *top_node,
 						char stack_name)
 {

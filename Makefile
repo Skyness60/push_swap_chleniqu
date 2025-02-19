@@ -6,15 +6,25 @@
 #    By: chheniqu <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/22 18:31:08 by chheniqu          #+#    #+#              #
-#    Updated: 2024/11/22 18:31:23 by chheniqu         ###   ########.fr        #
+#    Updated: 2025/02/17 10:01:59 by chheniqu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=	push_swap
 
 SRCS=	ft_check_error.c \
-		utils.c \
+		a_to_b.c \
+		b_to_a.c \
 		operations.c \
+		operations2.c \
+		operations3.c \
+		push_swap_utils.c \
+		push_swap.c \
+		sort_stack.c \
+		sort_three.c \
+		stack_initialization.c \
+		utils.c \
+		poubelle.c
 
 OBJECTS=	$(SRCS:.c=.o)
 
@@ -24,7 +34,7 @@ HEADERS=	includes
 
 CC=	cc
 
-CFLAGS=	-Wall -Werror -Wextra -I $(HEADERS)
+CFLAGS=	-Wall -Werror -Wextra -g3 -I $(HEADERS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

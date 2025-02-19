@@ -30,11 +30,10 @@ int	ft_atoi_check(const char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		result = result * 10 + (str[i] - '0');
-		if (result > 2147483647 || result < -2147483648)
+		if ((sign == 1 && result > 2147483647)
+			|| ((sign == -1) && result > 2147483648))
 			return (1);
 		i++;
 	}
 	return (0);
 }
-
-
